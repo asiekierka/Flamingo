@@ -3,85 +3,71 @@ package com.reddit.user.koppeh.flamingo;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.SoundType;
+import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.PropertyInteger;
-import net.minecraft.block.state.BlockStateContainer;
+import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.state.IntegerProperty;
+import net.minecraft.state.StateContainer;
+import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.util.math.shapes.ShapeUtils;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+
+import javax.annotation.Nullable;
 
 public class BlockFlamingo extends BlockContainer {
-
-	public static final PropertyInteger ROTATION = PropertyInteger.create("rotation", 0, 15);
-	private static final AxisAlignedBB FLAMINGO_AABB = new AxisAlignedBB(3 / 16.0F, 0, 3 / 16.0F, 13 / 16.0F, 1, 13 / 16.0F);
+	public static final IntegerProperty ROTATION = BlockStateProperties.ROTATION;
+	private static final VoxelShape SHAPE = ShapeUtils.makeCuboidShape(3 / 16.0F, 0, 3 / 16.0F, 13 / 16.0F, 1, 13 / 16.0F);
 
 	public BlockFlamingo() {
-		super(Material.CLOTH);
-		setHardness(1.5f);
-		setSoundType(SoundType.CLOTH);
-		setUnlocalizedName("flamingo.flamingo");
-		setRegistryName("flamingo.flamingo");
-		GameRegistry.findRegistry(Block.class).register(this);
-		GameRegistry.findRegistry(Item.class).register(new ItemBlock(this).setRegistryName(getRegistryName()));
-		setCreativeTab(CreativeTabs.DECORATIONS);
+		super(Block.Builder.create(Material.CLOTH, MapColor.PINK).soundType(SoundType.CLOTH).hardnessAndResistance(1.5f, 6.0f));
 	}
 
 	@Override
-	@Deprecated
-	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
-		return FLAMINGO_AABB;
-	}
-
-	@Override
-	@Deprecated
-	public boolean isOpaqueCube(IBlockState state) {
-		return false;
-	}
-
-	@Override
-	@Deprecated
 	public boolean isFullCube(IBlockState state) {
 		return false;
 	}
 
-	@SideOnly(Side.CLIENT)
+	@Override
+	public boolean isSolid(IBlockState state) {
+		return false;
+	}
+
+	@Override
+	public BlockFaceShape getBlockFaceShape(IBlockReader world, IBlockState state, BlockPos pos, EnumFacing facing) {
+		return BlockFaceShape.UNDEFINED;
+	}
+
+	@Override
+	public VoxelShape getShape(IBlockState state, IBlockReader world, BlockPos pos) {
+		return SHAPE;
+	}
+
 	@Override
 	public EnumBlockRenderType getRenderType(IBlockState state) {
 		return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
 	}
 
 	@Override
-	public int getMetaFromState(IBlockState state) {
-		return state.getValue(ROTATION);
+	protected void addPropertiesToBuilder(StateContainer.Builder<Block, IBlockState> builder) {
+		builder.addProperties(ROTATION);
 	}
 
+	@Nullable
 	@Override
-	@Deprecated
-	public IBlockState getStateFromMeta(int meta) {
-		return getDefaultState().withProperty(ROTATION, meta);
-	}
-
-	@Override
-	protected BlockStateContainer createBlockState()
-	{
-		return new BlockStateContainer(this, ROTATION);
-	}
-
-	@Override
-	public TileEntity createNewTileEntity(World world, int par2) {
+	public TileEntity getTileEntity(IBlockReader world) {
 		return new TileEntityFlamingo();
 	}
 
@@ -92,7 +78,7 @@ public class BlockFlamingo extends BlockContainer {
 	}
 
 	@Override
-	public void onBlockClicked(World world, BlockPos pos, EntityPlayer player) {
+	public void onLeftClick(IBlockState state, World world, BlockPos pos, EntityPlayer player) {
 		if(world.isRemote) {
 			return;
 		}

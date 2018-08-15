@@ -1,20 +1,18 @@
 package com.reddit.user.koppeh.flamingo;
 
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
-@SideOnly(Side.CLIENT)
-public class TileEntityFlamingoRenderer extends TileEntitySpecialRenderer<TileEntityFlamingo> {
+public class TileEntityFlamingoRenderer extends TileEntityRenderer<TileEntityFlamingo> {
+	public static final TileEntityFlamingoRenderer INSTANCE = new TileEntityFlamingoRenderer();
 
-	private ModelFlamingo model = new ModelFlamingo();
-	private ResourceLocation resource = new ResourceLocation("flamingo", "textures/models/flamingo.png");
+	private final ModelFlamingo model = new ModelFlamingo();
+	private final ResourceLocation resource = new ResourceLocation("flamingo", "textures/models/flamingo.png");
 
 	@Override
-	public void render(TileEntityFlamingo flamingo, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
+	public void func_199341_a(TileEntityFlamingo flamingo, double x, double y, double z, float partialTicks, int destroyStage) {
 		int rotation = 0;
 		float wiggle = 0;
 
@@ -31,7 +29,7 @@ public class TileEntityFlamingoRenderer extends TileEntitySpecialRenderer<TileEn
 
 		if(flamingo != null) {
 			if(flamingo.getWorld() != null) {
-				rotation = flamingo.getBlockMetadata() * 360 / 16;
+				rotation = flamingo.getBlockState().getValue(BlockFlamingo.ROTATION) * 360 / 16;
 			}
 
 			wiggle = (float) Math.sin(flamingo.wiggle + partialTicks) * flamingo.wiggleStrength;

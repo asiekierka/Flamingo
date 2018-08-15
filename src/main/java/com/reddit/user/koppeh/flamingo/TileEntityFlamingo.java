@@ -1,15 +1,21 @@
 package com.reddit.user.koppeh.flamingo;
 
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ITickable;
 
 public class TileEntityFlamingo extends TileEntity implements ITickable {
+	public static TileEntityType<TileEntityFlamingo> TYPE;
 
 	public static final float MAX_WIGGLE_STRENGTH = 40.0F;
 	public static final float DEFAULT_WIGGLE_STRENGTH_PER_CLICK = 15.0F;
 
 	float wiggle = 0;
 	float wiggleStrength = 0.0F;
+
+	public TileEntityFlamingo() {
+		super(TYPE);
+	}
 
 	@Override
 	public void update() {

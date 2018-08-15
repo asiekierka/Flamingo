@@ -1,38 +1,41 @@
 package com.reddit.user.koppeh.flamingo;
 
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.Mod.Instance;
-import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraft.block.Block;
+import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemGroup;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.ResourceLocation;
+import org.dimdev.rift.listener.BlockAdder;
+import org.dimdev.rift.listener.ItemAdder;
+import org.dimdev.rift.listener.TileEntityTypeAdder;
+import org.dimdev.rift.listener.client.TileEntityRendererAdder;
 
-@Mod(modid = "flamingo", version = "1.12-1.11", useMetadata = true, dependencies = "required-after:forge@[14.21.1.2395,)")
-public class Flamingo {
+import java.util.Map;
 
-	@Instance("Flamingo")
-	public static Flamingo instance;
-
-	@SidedProxy(clientSide = "com.reddit.user.koppeh.flamingo.ClientProxy",
-		serverSide = "com.reddit.user.koppeh.flamingo.CommonProxy")
-	public static CommonProxy proxy;
-
+public class Flamingo implements BlockAdder, ItemAdder, TileEntityRendererAdder, TileEntityTypeAdder {
+	public static final ResourceLocation LOCATION = new ResourceLocation("flamingo", "flamingo.flamingo");
 	public static BlockFlamingo flamingo;
 
-	@Mod.EventHandler
-	public void preInit(FMLPreInitializationEvent event) {
-		initializeItems();
-		GameRegistry.registerTileEntity(TileEntityFlamingo.class, "flamingo.flamingo");
-		proxy.registerItemModels();
+	@Override
+	public void registerBlocks() {
+		Block.registerBlock(LOCATION, flamingo = new BlockFlamingo());
 	}
 
-	@Mod.EventHandler
-	public void load(FMLInitializationEvent event) {
-		proxy.registerRenderers();
+	@Override
+	public void registerItems() {
+		Item.registerItemBlock(new ItemBlockFlamingo(flamingo, new Item.Builder().group(ItemGroup.DECORATIONS)));
 	}
 
-	private void initializeItems() {
-		flamingo = new BlockFlamingo();
+	@Override
+	public void registerTileEntityTypes() {
+		TileEntityFlamingo.TYPE = TileEntityType.registerTileEntityType(LOCATION.toString(), TileEntityType.Builder.create(TileEntityFlamingo::new));
 	}
 
+	@Override
+	public void addTileEntityRenderers(Map<Class<? extends TileEntity>, TileEntityRenderer<? extends TileEntity>> renderers) {
+		renderers.put(TileEntityFlamingo.class, TileEntityFlamingoRenderer.INSTANCE);
+	}
 }

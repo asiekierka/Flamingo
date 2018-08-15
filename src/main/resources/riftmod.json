@@ -1,0 +1,13 @@
+{
+  "id": "flamingo",
+  "name": "Flamingo",
+  "authors": [
+    "Vexatos",
+    "copygirl",
+    "asie"
+  ],
+  "listeners": [
+    "com.reddit.user.koppeh.flamingo.Flamingo",
+    "com.reddit.user.koppeh.flamingo.mixin.FlamingoMixins"
+  ]
+}

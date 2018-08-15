@@ -1,31 +1,44 @@
 buildscript {
     repositories {
         jcenter()
-        maven {
-            name = "forge"
-            url = "http://files.minecraftforge.net/maven"
-        }
+        maven { url = "https://www.dimdev.org/maven" }
+        maven { url 'http://repo.spongepowered.org/maven' }
+        maven { url "https://plugins.gradle.org/m2/" }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+        classpath 'org.dimdev:ForgeGradle:2.3-SNAPSHOT'
+        classpath 'org.spongepowered:mixingradle:0.6-SNAPSHOT'
     }
 }
-apply plugin: 'net.minecraftforge.gradle.forge'
 
-version = "1.12-1.11"
+apply plugin: 'net.minecraftforge.gradle.tweaker-client'
+apply plugin: 'java'
+apply plugin: 'org.spongepowered.mixin'
+
+version = "1.13-rift-1.12"
 group= "com.reddit.user.koppeh.flamingo" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "Flamingo"
 
 minecraft {
-    version = '1.12-14.21.1.2395'
-    runDir = "run"
-    
-    // the mappings can be changed at any time, and must be in the following format.
-    // snapshot_YYYYMMDD   snapshot are built nightly.
-    // stable_#            stables are built at the discretion of the MCP team.
-    // Use non-default mappings at your own risk. they may not allways work.
-    // simply re-run your setup task after changing the mappings to update your workspace.
-    mappings = 'snapshot_20170717'
+    version = "1.13"
+    mappings = "snapshot_5"
+
+    runDir = "run"    
+    tweakClass = 'org.dimdev.riftloader.launch.RiftLoaderClientTweaker'
+}
+
+repositories {
+    mavenCentral()
+    maven { url 'https://www.dimdev.org/maven/' }
+}
+
+dependencies {
+    implementation 'org.dimdev:rift:1.0.3-45:dev'
+}
+
+mixin {
+    defaultObfuscationEnv notch
+    add sourceSets.main, 'mixins.flamingo.refmap.json'
 }
 
 processResources
