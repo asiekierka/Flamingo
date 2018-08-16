@@ -8,6 +8,7 @@
   ],
   "listeners": [
     "com.reddit.user.koppeh.flamingo.Flamingo",
+    "com.reddit.user.koppeh.flamingo.FlamingoClient",
     "com.reddit.user.koppeh.flamingo.mixin.FlamingoMixins"
   ]
 }

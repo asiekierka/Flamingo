@@ -15,7 +15,7 @@ import org.dimdev.rift.listener.client.TileEntityRendererAdder;
 
 import java.util.Map;
 
-public class Flamingo implements BlockAdder, ItemAdder, TileEntityRendererAdder, TileEntityTypeAdder {
+public class Flamingo implements BlockAdder, ItemAdder, TileEntityTypeAdder {
 	public static final ResourceLocation LOCATION = new ResourceLocation("flamingo", "flamingo.flamingo");
 	public static BlockFlamingo flamingo;
 
@@ -32,10 +32,5 @@ public class Flamingo implements BlockAdder, ItemAdder, TileEntityRendererAdder,
 	@Override
 	public void registerTileEntityTypes() {
 		TileEntityFlamingo.TYPE = TileEntityType.registerTileEntityType(LOCATION.toString(), TileEntityType.Builder.create(TileEntityFlamingo::new));
-	}
-
-	@Override
-	public void addTileEntityRenderers(Map<Class<? extends TileEntity>, TileEntityRenderer<? extends TileEntity>> renderers) {
-		renderers.put(TileEntityFlamingo.class, TileEntityFlamingoRenderer.INSTANCE);
 	}
 }
